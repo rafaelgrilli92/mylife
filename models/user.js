@@ -14,16 +14,18 @@ const userSchema = new Schema({
 // On Save, encrypt password
 // Before saving a model, run this function
 userSchema.pre('save', function(next) {
+    var user = this;
+
     // Generate a SALT
     bcrypt.genSalt(10, function(err, salt) {
         if (err) return next(err);
 
         // HASH the password using the SALT
-        bcrypt.hash(this.password, salt, null, function(err, hash) {
+        bcrypt.hash(user.password, salt, null, function(err, hash) {
             if (err) return next(err);
 
             // Overwrite plain text password with encrypted password
-            this.password = hash;
+            user.password = hash;
             return next();
         })
     })

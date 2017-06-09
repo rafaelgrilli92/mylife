@@ -1,12 +1,23 @@
 'use strict'
+const passport = require('passport');
+
+const requireSignIn = passport.authenticate('local', { session: false });
+const passportService = require('../services/passport');
 
 const httpResponse = require('../helpers/http_response');
 const statusCode = require('../helpers/status_code');
 const dataValidation = require('../helpers/data_validation');
-
 const User = require('../models/user');
 
 module.exports.controller = function(app) {
+    /**
+     * SIGN IN
+     */
+    app.post('/signin', requireSignIn, function(req, res) {
+        res.send({ success: 'You are authenticated.' })
+    });
+
+
     /**
      * Sign Up
      */
@@ -48,7 +59,7 @@ module.exports.controller = function(app) {
                 }
 
                 // Respond the request indicating the user was created
-                return httpResponse.success(res, "The user was created successfully")
+                return httpResponse.success(res, "The user was created successfully", null, statusCode.success.CREATED)
             });
         })
     });
