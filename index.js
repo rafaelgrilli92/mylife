@@ -2,6 +2,7 @@
 
 const scribe = require('scribe-js')(); // logger
 const console = process.console; // logger
+global._ = require('lodash/core');
 
 const express = require('express'),
 http = require('http'),

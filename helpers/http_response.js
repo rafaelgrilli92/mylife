@@ -10,7 +10,7 @@ const defaultClientErrorMessage = "Sorry, something went wrong on the server :("
  * @param {number} [statusCode=200] 
  * @param {string|string[]} [message]
  */
-exports.success = function(res, data, statusCode = 200, message) {
+ function success(res, message, data, statusCode = 200) {
     return res.status(statusCode).send({
         status: statusCode,
         data,
@@ -25,7 +25,7 @@ exports.success = function(res, data, statusCode = 200, message) {
  * @param {string|string[]} [clientError=Something went wrong] - Text or array containing a description for each error for the 'end user'
  * @param {string} [devError] - Description for developers
  */
-exports.wrong = function(res, statusCode, clientError, devError) {
+function wrong(res, statusCode, clientError, devError) {
     if (!clientError || typeof clientError === "undefined")
         clientError = defaultClientErrorMessage;
 
@@ -50,7 +50,7 @@ exports.wrong = function(res, statusCode, clientError, devError) {
  * @param {number} statusCode
  * @param {string|string[]} [clientError=Something went wrong] - Text or array containing a description for each error to show to the end user
  */
-exports.error = function(res, fullError, devError = defaultDevErrorMessage, statusCode = 500, clientError = defaultClientError) {
+function error(res, fullError, devError = defaultDevErrorMessage, statusCode = 500, clientError = defaultClientError) {
     return res.status(statusCode).send({
         status: statusCode,
         error: {
@@ -60,4 +60,10 @@ exports.error = function(res, fullError, devError = defaultDevErrorMessage, stat
             clientError
         }
     });
+};
+
+module.exports = { 
+    success, 
+    wrong, 
+    error 
 };

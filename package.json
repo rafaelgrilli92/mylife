@@ -15,8 +15,10 @@
     "cors": "^2.8.3",
     "express": "^4.15.3",
     "fs": "0.0.1-security",
+    "lodash": "^4.17.4",
     "mongoose": "^4.10.5",
-    "scribe-js": "^2.0.4"
+    "scribe-js": "^2.0.4",
+    "validator": "^7.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
