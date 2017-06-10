@@ -1,10 +1,10 @@
 'use strict'
 
-module.exports.controller = function(app) {
+module.exports.controller = app => {
     /**
      * Index Route
      */
-    app.get('/', function(req, res) {
+    app.get('/', (req, res) => {
         res.send({ message: 'index route' })
     });
 }
