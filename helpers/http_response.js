@@ -41,7 +41,7 @@ function wrong(res, statusCode, message, list) {
  * @param {number} [statusCode=500]
  */
 function error(res, err, message = "Something went wrong", statusCode = 500) {
-    log.error(message, err.stack)
+    log.error(`${message}\n${err.stack}`);
     let errorObject = {
         status: statusCode,
         error: {
