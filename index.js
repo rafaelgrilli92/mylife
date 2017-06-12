@@ -13,6 +13,8 @@ passport = require('passport'),
 bodyParser = require('body-parser'),
 cors = require('cors');
 
+const serverHandlers = require('./helpers/server_handlers');
+
 // DB Setup
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
@@ -37,6 +39,9 @@ fs.readdirSync('./controllers').forEach(function (file) {
       route.controller(app);
   }
 });
+
+app.use(serverHandlers.notFound);
+app.use(serverHandlers.error);
 
 // server setup
 const port = process.env.PORT || 3000;
