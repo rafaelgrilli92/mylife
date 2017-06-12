@@ -45,7 +45,7 @@ module.exports.controller = app => {
 
         // Try to find the user on the database
         User.findOne({ email: userData.email }) 
-        .then(doc => {            
+        .then(user => {            
             // Check if email is already in use
             if (user)
                 return httpResponse.wrong(res, statusCode.error.CONFLICT, `The email ${userData.email} is already in use`);
@@ -53,9 +53,9 @@ module.exports.controller = app => {
             // Save the user on db
             const newUser = new User(userData);
             newUser.save()
-            .then((doc) => {
+            .then(user => {
                 // Respond the request indicating the user was created
-                return httpResponse.success(res, "The user was successfully created", null, statusCode.success.CREATED)
+                return httpResponse.success(res, "The user was successfully created", user, statusCode.success.CREATED)
             })
             .catch(err => {
                 return httpResponse.error(res, err, "Error while saving the user on the database");

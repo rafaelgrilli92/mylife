@@ -9,6 +9,7 @@ global.log = process.console;
 const express = require('express'),
 http = require('http'),
 fs = require('fs'),
+passport = require('passport'),
 bodyParser = require('body-parser'),
 cors = require('cors');
 
@@ -26,6 +27,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ type: '*/*' }));
 app.use(scribe.express.logger());
+app.use(passport.initialize())
 app.use('/logs', scribe.webPanel());
 
 // dynamically include routes (Controller)
