@@ -22,11 +22,9 @@ function requireSignIn(req, res, next) {
                 
                  // If it's correct
                 req.login(user, loginErr => {
-                    if (loginErr) {
-                        return next(loginErr);
-                    }
+                    if (loginErr) return httpResponse.error(res, loginErr, 'Error while login in the user on the session');
 
-                    return res.send({ success : true, message : 'authentication succeeded' });
+                    return httpResponse.success(res, 'authentication succeeded', user);
                 });      
             })
         })
