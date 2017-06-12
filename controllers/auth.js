@@ -16,7 +16,6 @@ module.exports.controller = app => {
      */
     app.post('/signin', (req, res, next) => {
         return auth.requireSignIn(req, res, next);
-        //res.send({ success: 'You are authenticated.' })
     });
 
 
