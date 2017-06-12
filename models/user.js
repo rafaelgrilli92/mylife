@@ -8,7 +8,8 @@ const userSchema = new Schema({
     password: String,
     firstName: String,
     lastName: String,
-    phone: String
+    phone: String,
+    facebook: Object
 });
 
 // On Save, encrypt password

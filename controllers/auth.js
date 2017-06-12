@@ -1,8 +1,6 @@
 'use strict'
-const passport = require('passport');
 
-//const requireSignIn = passport.authenticate('local', { session: false });
-//const passportService = require('../services/passport');
+const passport = require('passport');
 
 const auth = require('../helpers/auth');
 const httpResponse = require('../helpers/http_response');
@@ -10,19 +8,28 @@ const statusCode = require('../helpers/status_code');
 const dataValidation = require('../helpers/data_validation');
 const User = require('../models/user');
 
+const FacebookAuth = passport.authenticate('facebook',  { session: false });
+
 module.exports.controller = app => {
     /**
-     * SIGN IN
+     * SIGN IN LOCAL
      */
-    app.post('/signin', (req, res, next) => {
+    app.post('/auth/signin', (req, res, next) => {
         return auth.requireSignIn(req, res, next);
     });
 
+    /**
+     * SIGN IN FACEBOOK
+     */
+    app.get('/auth/facebook', FacebookAuth);
+    app.get('/auth/facebook/callback', FacebookAuth, function(req, res) {
+        res.send({ user: req.user })
+    });
 
     /**
      * SIGN UP
      */
-    app.post('/signup', (req, res) => {
+    app.post('/auth/signup', (req, res) => {
         const userData = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
 
         // Validate fields

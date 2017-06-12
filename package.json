@@ -19,6 +19,7 @@
     "lodash": "^4.17.4",
     "mongoose": "^4.10.5",
     "passport": "^0.3.2",
+    "passport-facebook": "^2.1.1",
     "passport-local": "^1.0.0",
     "scribe-js": "^2.0.4",
     "validator": "^7.0.0"
