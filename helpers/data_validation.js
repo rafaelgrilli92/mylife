@@ -1,5 +1,6 @@
-const isEmail = require('validator').isEmail;
+'use strict'
 
+const isEmail = require('validator').isEmail;
 
 function validation(data, validations) {
     let errors = [];
@@ -29,6 +30,18 @@ function validation(data, validations) {
     return errors.length > 0 ? errors : false;
 };
 
+/**
+ * Check if it is a valid email
+ * @param {string} email Email
+ */
+function isValidEmail(email) {
+    return isEmail(email);
+}
+
+/**
+ * Gets all the error messages from mongoose and transforms into an array os strings
+ * @param {object} err Mongoose error object
+ */
 function getMongooseErrorMessagesList(err) {
     let errorsList = [];
 
@@ -42,4 +55,7 @@ function getMongooseErrorMessagesList(err) {
     return errorsList.length > 0 ? errorsList : false;
 }
 
-module.exports = getMongooseErrorMessagesList;
+module.exports = { 
+    isValidEmail,
+    getMongooseErrorMessagesList 
+};

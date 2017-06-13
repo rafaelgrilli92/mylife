@@ -32,28 +32,20 @@ module.exports.controller = app => {
      */
     app.post('/auth/signup', (req, res) => {
         const userData = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
+        const newUser = new User(userData);
 
-        // Validate fields
-        const validations = {
-            email: ['required', 'email'],
-            password: ['required'],
-            firstName: ['required'],
-            lastName: ['required']
-        };
-
-        const validationErrors = dataValidation(userData, validations);
-        if (validationErrors)
-            return httpResponse.wrong(res, statusCode.error.BAD_REQUEST, "Something is wrong with the fields", validationErrors);
+        const validationSchema = dataValidation.getMongooseErrorMessagesList(newUser.validateSync());
+        if (validationSchema)
+            return httpResponse.wrong(res, statusCode.error.BAD_REQUEST, "Something is wrong with the fields", validationSchema);
 
         // Try to find the user on the database
         User.findOne({ email: userData.email }) 
         .then(user => {            
             // Check if email is already in use
             if (user)
-                return httpResponse.wrong(res, statusCode.error.CONFLICT, `The email ${userData.email} is already in use`);
+                return httpResponse.wrong(res, statusCode.error.CONFLICT, `The email '${userData.email}' is already in use`);
 
             // Save the user on db
-            const newUser = new User(userData);
             newUser.save()
             .then(user => {
                 // Respond the request indicating that the user was created

@@ -1,13 +1,25 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt-nodejs');
+const dataValidation = require('../helpers/data_validation');
 
 // Define Model
 const userSchema = new Schema({
-    email: { type: String, unique: true, lowercase: true },
-    password: String,
-    firstName: String,
-    lastName: String,
+    email: { 
+        type: String, 
+        unique: true, 
+        lowercase: true, 
+        required: true,
+        validate: {
+            validator: function(value) {
+                return dataValidation.isValidEmail(value);
+            },
+            message: "'{VALUE}' is not a valid email"
+        }
+    },
+    password: { type: String, required: true },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     phone: String,
     facebook: Object
 });

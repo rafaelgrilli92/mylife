@@ -14,7 +14,7 @@ module.exports.controller = app => {
         const todoData = _.pick(req.body, ['title', 'items', 'dueData']);
         const newTodo = new ToDo(todoData);
 
-        const validationSchema = dataValidation(newTodo.validateSync());
+        const validationSchema = dataValidation.getMongooseErrorMessagesList(newTodo.validateSync());
         if (validationSchema)
             return httpResponse.wrong(res, statusCode.error.BAD_REQUEST, "Something is wrong with the fields", validationSchema);
 
