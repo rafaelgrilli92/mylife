@@ -42,12 +42,7 @@ module.exports.controller = app => {
 
         const validationErrors = dataValidation(userData, validations);
         if (validationErrors)
-            return httpResponse.wrong(
-                res, 
-                statusCode.error.BAD_REQUEST, 
-                "Something is wrong with the fields",
-                validationErrors
-            )
+            return httpResponse.wrong(res, statusCode.error.BAD_REQUEST, "Something is wrong with the fields", validationErrors);
 
         // Try to find the user on the database
         User.findOne({ email: userData.email }) 
@@ -60,7 +55,7 @@ module.exports.controller = app => {
             const newUser = new User(userData);
             newUser.save()
             .then(user => {
-                // Respond the request indicating the user was created
+                // Respond the request indicating that the user was created
                 return httpResponse.success(res, "The user was successfully created", user, statusCode.success.CREATED)
             })
             .catch(err => {
