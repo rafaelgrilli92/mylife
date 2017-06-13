@@ -1,4 +1,5 @@
 node_modules/
 logs/
 configs/facebook.js
+configs/app.js
 npm-debug.log

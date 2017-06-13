@@ -23,7 +23,8 @@ module.exports.controller = app => {
      */
     app.get('/auth/facebook', FacebookAuth);
     app.get('/auth/facebook/callback', FacebookAuth, function(req, res) {
-        res.send({ user: req.user })
+        const token = auth.generateToken(user);
+        res.send({ user: req.user, token })
     });
 
     /**
@@ -56,7 +57,8 @@ module.exports.controller = app => {
             newUser.save()
             .then(user => {
                 // Respond the request indicating that the user was created
-                return httpResponse.success(res, "The user was successfully created", user, statusCode.success.CREATED)
+                const token = auth.generateToken(user);
+                return httpResponse.success(res, "The user was successfully created", { user, token }, statusCode.success.CREATED)
             })
             .catch(err => {
                 return httpResponse.error(res, err, "Error while saving the user on the database");
