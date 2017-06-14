@@ -32,6 +32,7 @@ app.use(scribe.express.logger());
 app.use(passport.initialize())
 app.use('/logs', scribe.webPanel());
 
+
 // dynamically include routes (Controller)
 fs.readdirSync('./controllers').forEach(function (file) {
   if(file.substr(-3) === '.js') {

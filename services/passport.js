@@ -59,7 +59,7 @@ const facebookStrategy = new FacebookStrategy(facebookConfig,
                 return done(null, user);
             })
             .catch(err => {
-                 return done(err);
+                return done(err);
             });
         } else {
             return done(null, user);
@@ -72,13 +72,13 @@ const facebookStrategy = new FacebookStrategy(facebookConfig,
 );
 
 passport.serializeUser(function(user, done) {
-    done(null, user._id);
+    return done(null, user._id);
 });
 
 passport.deserializeUser(function(id, done) {
     User.findById(id, function(err, user){
-        if(!err) done(null, user);
-        else done(err, null)  
+        if(!err) return done(null, user);
+        else return done(err, null)  
     })
 });
 
