@@ -49,7 +49,7 @@ module.exports.controller = app => {
         })
     });
 
-     /**
+    /**
      * PUT
      */
     app.put('/todo/:id', requireToken, (req, res) => { 
@@ -69,6 +69,23 @@ module.exports.controller = app => {
         })
         .catch(err => {
             return httpResponse.error(res, err, "Error while updating the ToDo on the database");
+        })
+    });
+
+    /**
+     * DELETE
+     */
+    app.delete('/todo/:id', requireToken, (req, res) => { 
+        const todoId = req.params.id;
+        
+        ToDo.findByIdAndRemove(todoId)
+        .then(todo => {
+            if (!todo) return httpResponse.wrong(res, statusCode.error.CONFLICT,`ToDo with ID '${todoId}' was not found`);
+
+            return httpResponse.success(res, null, null, statusCode.success.NO_CONTENT)
+        })
+        .catch(err => {
+            return httpResponse.error(res, err, "Error while deleting the ToDo on the database");
         })
     });
 }
