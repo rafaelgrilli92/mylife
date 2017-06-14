@@ -2,7 +2,11 @@ const httpResponse = require('../helpers/http_response');
 const statusCode = require('../helpers/status_code');
 
 function notFound(req, res, next) {  
-  return httpResponse.wrong(res, statusCode.error.NOT_FOUND, `The endpoint '${req.url}' doest not exist`)
+  return httpResponse.wrong(
+    res, 
+    statusCode.error.NOT_FOUND, 
+    `The endpoint '${req.url}' for the method '${req.method}' doest not exist`
+  );
 }
 
 function error(err, req, res, next) {

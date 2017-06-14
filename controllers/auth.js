@@ -36,7 +36,7 @@ module.exports.controller = app => {
 
         const validationSchema = dataValidation.getMongooseErrorMessagesList(newUser.validateSync());
         if (validationSchema)
-            return httpResponse.wrong(res, statusCode.error.BAD_REQUEST, "Something is wrong with the fields", validationSchema);
+            return httpResponse.wrong(res, statusCode.error.CONFLICT, "Something is wrong with the fields", validationSchema);
 
         // Try to find the user on the database
         User.findOne({ email: userData.email }) 

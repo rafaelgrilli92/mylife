@@ -17,7 +17,7 @@ module.exports.controller = app => {
         const todoId = req.params.id;
         const search = todoId ? ToDo.findById(todoId) : ToDo.find({});
         search.then(result => {
-            if (!result) return httpResponse.success(res, "ToDo was not found", null);
+            if (!result) return httpResponse.wrong(res, statusCode.error.CONFLICT, `ToDo with ID '${todoId}' was not found`, null);
                 
             return httpResponse.success(res, "Data successfully fetched", result)
         })
@@ -38,7 +38,7 @@ module.exports.controller = app => {
 
         const validationSchema = dataValidation.getMongooseErrorMessagesList(newTodo.validateSync());
         if (validationSchema)
-            return httpResponse.wrong(res, statusCode.error.BAD_REQUEST, "Something is wrong with the fields", validationSchema);
+            return httpResponse.wrong(res, statusCode.error.CONFLICT, "Something is wrong with the fields", validationSchema);
 
         newTodo.save()
         .then(todo => {
@@ -46,6 +46,29 @@ module.exports.controller = app => {
         })
         .catch(err => {
             return httpResponse.error(res, err, "Error while saving the ToDo on the database");
+        })
+    });
+
+     /**
+     * PUT
+     */
+    app.put('/todo/:id', requireToken, (req, res) => { 
+        const todoId = req.params.id;
+        const todoData = _.pick(req.body, ['title', 'items', 'dueData']);
+        const newTodo = new ToDo(todoData);
+
+        const validationSchema = dataValidation.getMongooseErrorMessagesList(newTodo.validateSync());
+        if (validationSchema)
+            return httpResponse.wrong(res, statusCode.error.CONFLICT, "Something is wrong with the fields", validationSchema);
+
+        ToDo.findByIdAndUpdate(todoId, todoData)
+        .then(todo => {
+            if (!todo) return httpResponse.wrong(res, statusCode.error.CONFLICT,`ToDo with ID '${todoId}' was not found`);
+
+            return httpResponse.success(res, null, null, statusCode.success.NO_CONTENT)
+        })
+        .catch(err => {
+            return httpResponse.error(res, err, "Error while updating the ToDo on the database");
         })
     });
 }
