@@ -16,9 +16,9 @@ module.exports.controller = app => {
      * GET
      */
     app.get('/me', requireToken, (req, res) => { 
-        const userId = req.user._id;
+        const userId = req.user.id;
 
-        User.findById(userId).populate(['createdBy', 'updatedBy'])
+        User.findById(userId)
         .then(user => {
             if (!user) return httpResponse.wrong(res, statusCode.error.NOT_FOUND, `User was not found`);
                 
@@ -36,7 +36,7 @@ module.exports.controller = app => {
      * PUT
      */
     app.put('/me', requireToken, (req, res) => { 
-        const userId = req.user._id;
+        const userId = req.user.id;
         const dataToUpdate = _.pick(req.body, ["firstName", "lastName", "phone", ]);
         User.findByIdAndUpdate(userId, { $set: dataToUpdate })
         .then(user => {
@@ -49,5 +49,20 @@ module.exports.controller = app => {
         })
     });
 
-    
+    /**
+     * DELETE
+     */
+    app.delete('/me', requireToken, (req, res) => { 
+        const userId = req.user.id;
+
+        User.findByIdAndUpdate(userId, { $set: { isActive: false, inactivatedAt: new Date() }})
+        .then(user => {
+            if (!user) return httpResponse.wrong(res, statusCode.error.NOT_FOUND,`User was not found`);
+
+            return httpResponse.success(res, null, null, statusCode.success.NO_CONTENT);
+        })
+        .catch(err => {
+            return httpResponse.error(res, err, "Error while inactivating the User on the database");
+        })
+    });
 }
