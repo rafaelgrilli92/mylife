@@ -3,7 +3,7 @@
 const scribe = require('scribe-js')(); // logger
 
 /** GLOBALS */
-global._ = require('lodash/core');
+global._ = require('lodash');
 global.log = process.console;
 
 const express = require('express'),

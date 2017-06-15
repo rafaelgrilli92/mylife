@@ -2,10 +2,11 @@
 
 const passport = require('passport');
 const jwt = require('jwt-simple');
+const bcrypt = require('bcrypt-nodejs');
+
 const appConfig = require('../configs').app;
 const httpResponse = require('./http_response');
 const statusCode = require('./status_code');
-const User = require('../models/user');
 
 function generateToken(user) {
     const timestamp = new Date().getTime();
@@ -13,6 +14,7 @@ function generateToken(user) {
 };
 
 function requireSignIn(req, res, next) {
+    const User = require('../models/user');
     passport.authenticate('local', { session: false }, (err, email, password) => {
         // Try to find the user on the database
         User.findOne({ email: email })
@@ -42,5 +44,23 @@ function requireSignIn(req, res, next) {
     })(req, res, next);
 }
 
-const passportService = require('../services/passport');
-module.exports = { requireSignIn, generateToken }
+function generateHashPassword(password, cb) {
+    // Generate a SALT
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) return cb(err);
+
+        // HASH the password using the SALT
+        bcrypt.hash(password, salt, null, function(err, hashPassword) {
+            if (err) return cb(err);
+
+            return cb(hashPassword);
+        })
+    })
+};
+
+//const passportService = require('../services/passport');
+module.exports = { 
+    requireSignIn, 
+    generateToken, 
+    generateHashPassword 
+};

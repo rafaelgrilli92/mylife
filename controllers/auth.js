@@ -31,15 +31,14 @@ module.exports.controller = app => {
      * SIGN UP
      */
     app.post('/auth/signup', (req, res) => {
-        const userData = _.pick(req.body, ['email', 'password', 'firstName', 'lastName']);
-        const newUser = new User(userData);
+        const newUser = new User(req.body);
 
         const validationSchema = dataValidation.getMongooseErrorMessagesList(newUser.validateSync());
         if (validationSchema)
             return httpResponse.wrong(res, statusCode.error.CONFLICT, "Something is wrong with the fields", validationSchema);
 
         // Try to find the user on the database
-        User.findOne({ email: userData.email }) 
+        User.findOne({ email: newUser.email }) 
         .then(user => {            
             // Check if email is already in use
             if (user)
