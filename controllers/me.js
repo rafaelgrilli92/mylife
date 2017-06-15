@@ -32,5 +32,22 @@ module.exports.controller = app => {
         })
     });
 
-   
+    /**
+     * PUT
+     */
+    app.put('/me', requireToken, (req, res) => { 
+        const userId = req.user._id;
+        const dataToUpdate = _.pick(req.body, ["firstName", "lastName", "phone", ]);
+        User.findByIdAndUpdate(userId, { $set: dataToUpdate })
+        .then(user => {
+            if (!user) return httpResponse.wrong(res, statusCode.error.NOT_FOUND,`User was not found`);
+
+            return httpResponse.success(res, null, null, statusCode.success.NO_CONTENT);
+        })
+        .catch(err => {
+            return httpResponse.error(res, err, "Error while updating the User on the database");
+        })
+    });
+
+    
 }
